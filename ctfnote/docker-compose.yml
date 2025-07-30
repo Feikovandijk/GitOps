@@ -2,8 +2,8 @@ version: "3.7"
 services:
   api:
     image: ghcr.io/tfns/ctfnote/api:latest
-    build:
-      context: "./api"
+#    build:
+#      context: "./api"
     networks:
       - ctfnote
     restart: unless-stopped
@@ -37,8 +37,8 @@ services:
       - ctfnote-uploads:/app/uploads
   db:
     image: ghcr.io/tfns/ctfnote/db:latest
-    build:
-      context: "./db"
+#    build:
+#      context: "./db"
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ctfnote
@@ -53,8 +53,8 @@ services:
     networks:
       - ctfnote
     restart: unless-stopped
-    build:
-      context: "./front"
+#    build:
+#      context: "./front"
     depends_on:
       - hedgedoc
     ports:
