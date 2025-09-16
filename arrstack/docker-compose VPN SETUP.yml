@@ -1,4 +1,22 @@
 services:
+  # VPN Client Container
+  openvpn:
+    image: dperson/openvpn-client:latest
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - TZ=Europe/Amsterdam
+      - VPN_USERNAME=${SURFSHARK_USERNAME}
+      - VPN_PASSWORD=${SURFSHARK_PASSWORD}
+    volumes:
+      - ${MEDIA_SERVER_PATH}/docker/openvpn:/vpn
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - vpn_network
+    command: "-f '' -vpn /vpn/surfshark.ovpn -u ${SURFSHARK_USERNAME} -p ${SURFSHARK_PASSWORD}"
+
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
@@ -28,11 +46,14 @@ services:
     volumes:
       - ${MEDIA_SERVER_PATH}/docker/qb:/config
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+#    ports:
+#      - 8080:8080
+#      - 6881:6881
+#      - 6881:6881/udp
     restart: unless-stopped
+    network_mode: "service:openvpn"
+    depends_on:
+      - openvpn
 
   ## Trackers
   prowlarr:
@@ -88,3 +109,7 @@ services:
     volumes:
       - ${MEDIA_SERVER_PATH}/docker/jellyseerr:/app/config
     restart: unless-stopped
+
+networks:
+  vpn_network:
+    driver: bridge
