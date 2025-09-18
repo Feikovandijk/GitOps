@@ -1,0 +1,22 @@
+services:
+  linkding:
+    container_name: "Linkding"
+    image: sissbruecker/linkding:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - "/home/servarr/linkding:/etc/linkding/data"
+    environment:
+      - LD_CONTAINER_NAME=linkding
+      - LD_HOST_PORT=9090
+      - LD_HOST_DATA_DIR=./data
+      - LD_CONTEXT_PATH=
+      - LD_SUPERUSER_NAME=${LD_SUPERUSER_NAME}
+      - LD_SUPERUSER_PASSWORD=${LD_SUPERUSER_PASSWORD}
+      - LD_DISABLE_BACKGROUND_TASKS=False
+      - LD_DISABLE_URL_VALIDATION=False
+      - LD_ENABLE_AUTH_PROXY=False
+      - LD_AUTH_PROXY_USERNAME_HEADER=
+      - LD_AUTH_PROXY_LOGOUT_URL=
+      - LD_CSRF_TRUSTED_ORIGINS=
+    restart: unless-stopped
