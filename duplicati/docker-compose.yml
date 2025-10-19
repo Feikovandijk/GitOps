@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+    volumes:
+      - ./duplicati-config:/config
+      - /var/lib/docker/volumes:/source/docker-volumes
+    ports:
+      - "8200:8200"
+    restart: unless-stopped
