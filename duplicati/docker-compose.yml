@@ -9,7 +9,7 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ./duplicati-config:/config
-      - /var/lib/docker/volumes:/source/docker-volumes
+      - /var/snap/docker/common/var-lib-docker/volumes:/source/docker-volumes
     ports:
       - "8200:8200"
     restart: unless-stopped
