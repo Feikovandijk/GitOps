@@ -7,6 +7,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
+      - SETTINGS_ENCRYPTION_KEY="wQw/biKhWTkywt5SIZLobdsXrX7gGwbB/f4Bl3uWMls="
     volumes:
       - ./duplicati-config:/config
       - /var/snap/docker/common/var-lib-docker/volumes:/source/docker-volumes
