@@ -1,0 +1,10 @@
+# env and secrets
+.env
+*.env
+*.pem
+*.key
+id_rsa*
+*.ovpn
+
+# docker overrides
+docker-compose.override.yml
