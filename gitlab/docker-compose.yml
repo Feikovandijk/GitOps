@@ -1,6 +1,6 @@
 services:
   gitlab:
-    image: gitlab/gitlab-ee:<version>-ee.0
+    image: gitlab/gitlab-ee:latest
     container_name: gitlab
     restart: always
     hostname: 'gitlab.example.com'
