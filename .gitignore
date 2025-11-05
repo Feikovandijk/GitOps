@@ -8,3 +8,14 @@ id_rsa*
 
 # docker overrides
 docker-compose.override.yml
+
+# Local Terraform directories
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# .tfvars files should not be committed if they contain secrets
+*.tfvars
+
+# Crash log files
+crash.log
