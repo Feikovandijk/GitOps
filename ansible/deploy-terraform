@@ -1,0 +1,40 @@
+# ansible/deploy-terraform.yml
+---
+- name: Manage Talos Infrastructure with Terraform
+  hosts: localhost # Run this playbook on the Semaphore runner itself
+  gather_facts: no # Not needed for local Terraform commands
+
+  # Define a variable for the path to your Terraform configuration files
+  # This path is relative to the root of your Git repository
+  vars:
+    terraform_config_path: "./terraform" # <--- IMPORTANT: Adjust this to your actual Terraform folder structure
+
+  tasks:
+    - name: Ensure Terraform is initialized
+      # 'command' module runs shell commands. '-input=false' prevents interactive prompts.
+      ansible.builtin.command: terraform init -input=false
+      args:
+        chdir: "{{ terraform_config_path }}" # Change directory to where your .tf files are
+
+    - name: Run Terraform Plan (show proposed changes)
+      ansible.builtin.command: terraform plan -input=false
+      args:
+        chdir: "{{ terraform_config_path }}"
+      register: tf_plan_output # Capture the output
+      changed_when: false # Plan doesn't change state, so don't mark as changed
+      # Ansible's `stdout_callback` can display output nicely
+
+    - name: Display Terraform Plan Output
+      ansible.builtin.debug:
+        var: tf_plan_output.stdout_lines
+
+    - name: Apply Terraform changes (create/update/delete VMs)
+      # '-auto-approve' makes it non-interactive, essential for automation
+      ansible.builtin.command: terraform apply -auto-approve -input=false
+      args:
+        chdir: "{{ terraform_config_path }}"
+      register: tf_apply_output
+
+    - name: Display Terraform Apply Output
+      ansible.builtin.debug:
+        var: tf_apply_output.stdout_lines
