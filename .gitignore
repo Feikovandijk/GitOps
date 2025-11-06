@@ -16,6 +16,7 @@ docker-compose.override.yml
 
 # .tfvars files should not be committed if they contain secrets
 *.tfvars
+*.tfvars.json
 
 # Crash log files
 crash.log
