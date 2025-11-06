@@ -12,9 +12,9 @@ services:
       PAD_SHOW_URL: /
       DB_DATABASE: ctfnote
       DB_ADMIN_LOGIN: ctfnote
-      DB_ADMIN_PASSWORD: ctfnote
+      DB_ADMIN_PASSWORD: ctfnote # Change in prod
       DB_USER_LOGIN: user_postgraphile
-      DB_USER_PASSWORD: secret_password_secret_password
+      DB_USER_PASSWORD: secret_password_secret_password # Change in prod
       DB_HOST: db
       DB_PORT: 5432
       WEB_PORT: 3000
@@ -41,7 +41,7 @@ services:
 #      context: "./db"
     restart: unless-stopped
     environment:
-      POSTGRES_PASSWORD: ctfnote
+      POSTGRES_PASSWORD: ctfnote # Change in prod
       POSTGRES_USER: ctfnote
       POSTGRES_MULTIPLE_DATABASES: hedgedoc
     volumes:

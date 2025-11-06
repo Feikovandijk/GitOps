@@ -23,7 +23,7 @@ services:
     environment:
       POSTGRES_DB: umami
       POSTGRES_USER: umami
-      POSTGRES_PASSWORD: umami
+      POSTGRES_PASSWORD: umami # Change in prod
     volumes:
       - umami-db-data:/var/lib/postgresql/data
     restart: always
