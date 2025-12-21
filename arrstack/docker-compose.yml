@@ -11,10 +11,10 @@ services:
       - ${MEDIA_SERVER_PATH}/data/media/tv:/data/tv
       - ${MEDIA_SERVER_PATH}/data/media/movies:/data/movies
     ports:
-      - 8096:8096
-      - 8920:8920
-      - 7359:7359/udp
-      - 1900:1900/udp
+      - 127.0.0.1:8096:8096
+      - 127.0.0.1:8920:8920
+      - 127.0.0.1:7359:7359/udp
+      - 127.0.0.1:1900:1900/udp
     restart: unless-stopped
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -29,9 +29,9 @@ services:
       - ${MEDIA_SERVER_PATH}/docker/qb:/config
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+      - 127.0.0.1:8080:8080
+      - 127.0.0.1:6881:6881
+      - 127.0.0.1:6881:6881/udp
     restart: unless-stopped
 
   ## Trackers
@@ -45,7 +45,7 @@ services:
     volumes:
       - ${MEDIA_SERVER_PATH}/docker/prowlarr:/config
     ports:
-      - 9696:9696
+      - 127.0.0.1:9696:9696
     restart: unless-stopped
 
   sonarr: # TV
@@ -60,7 +60,7 @@ services:
       - ${MEDIA_SERVER_PATH}/data/media/tv:/data/tv
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
-      - 8989:8989
+      - 127.0.0.1:8989:8989
     restart: unless-stopped
 
   radarr: # Movies
@@ -75,7 +75,7 @@ services:
       - ${MEDIA_SERVER_PATH}/data/media/movies:/data/movies
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
-      - 7878:7878
+      - 127.0.0.1:7878:7878
     restart: unless-stopped
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -84,7 +84,7 @@ services:
       - LOG_LEVEL=debug
       - TZ=Europe/Amsterdam
     ports:
-      - 5055:5055
+      - 127.0.0.1:5055:5055
     volumes:
       - ${MEDIA_SERVER_PATH}/docker/jellyseerr:/app/config
     restart: unless-stopped
