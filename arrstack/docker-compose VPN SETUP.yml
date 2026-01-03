@@ -12,6 +12,7 @@ services:
       - 8080:8080/tcp # qBittorrent Web UI
       - 6881:6881/tcp # qBittorrent TCP
       - 6881:6881/udp # qBittorrent UDP
+      - 9696:9696     # Prowlarr UI
     volumes:
       - ${CONFIG_PATH}/docker/gluetun:/gluetun
     environment:
@@ -72,8 +73,10 @@ services:
       - LOG_HTML=false
       - CAPTCHA_SOLVER=none
       - TZ=Europe/Amsterdam
-    ports:
-      - 8191:8191
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
     restart: unless-stopped
 
   prowlarr:
@@ -85,8 +88,10 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ${CONFIG_PATH}/docker/prowlarr:/config
-    ports:
-      - 9696:9696
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy
     restart: unless-stopped
 
   sonarr: # TV
