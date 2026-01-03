@@ -45,6 +45,8 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     restart: unless-stopped
+    networks:
+      - vpn_network
 
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -108,6 +110,8 @@ services:
     ports:
       - 8989:8989
     restart: unless-stopped
+    networks:
+      - vpn_network
 
   radarr: # Movies
     image: lscr.io/linuxserver/radarr:latest
@@ -123,6 +127,8 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+    networks:
+      - vpn_network
 
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -135,6 +141,8 @@ services:
     volumes:
       - ${CONFIG_PATH}/docker/jellyseerr:/app/config
     restart: unless-stopped
+    networks:
+      - vpn_network
 
 networks:
   vpn_network:
