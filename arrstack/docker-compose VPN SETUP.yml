@@ -1,21 +1,31 @@
 services:
-  # VPN Client Container
-  openvpn:
-    image: dperson/openvpn-client:latest
-    container_name: openvpn
+  # VPN Client Container using Gluetun
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
     cap_add:
       - NET_ADMIN
-    environment:
-      - TZ=Europe/Amsterdam
-      - VPN_USERNAME=${SURFSHARK_USERNAME}
-      - VPN_PASSWORD=${SURFSHARK_PASSWORD}
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP control server
+      - 8080:8080/tcp # qBittorrent Web UI
+      - 6881:6881/tcp # qBittorrent TCP
+      - 6881:6881/udp # qBittorrent UDP
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/openvpn:/vpn
-      - /etc/localtime:/etc/localtime:ro
+      - ${CONFIG_PATH}/docker/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=openvpn
+      # Get these from https://account.surfshark.com/vpn/manual-setup
+      - OPENVPN_USER=${SURFSHARK_USERNAME}
+      - OPENVPN_PASSWORD=${SURFSHARK_PASSWORD}
+      # You can change this to a specific location if desired, e.g. 'nl' for Netherlands
+      - SERVER_COUNTRIES=Netherlands
+      - TZ=Europe/Amsterdam
     restart: unless-stopped
     networks:
       - vpn_network
-    command: "-f '' -vpn /vpn/surfshark.ovpn -u ${SURFSHARK_USERNAME} -p ${SURFSHARK_PASSWORD}"
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
@@ -25,7 +35,7 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/jellyfin/config:/config
+      - ${CONFIG_PATH}/docker/jellyfin/config:/config
       - ${MEDIA_SERVER_PATH}/data/media/tv:/data/tv
       - ${MEDIA_SERVER_PATH}/data/media/movies:/data/movies
     ports:
@@ -34,6 +44,7 @@ services:
       - 7359:7359/udp
       - 1900:1900/udp
     restart: unless-stopped
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -44,16 +55,13 @@ services:
       - WEBUI_PORT=8080
       - DOCKER_MODS=ghcr.io/vuetorrent/vuetorrent-lsio-mod:latest
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/qb:/config
+      - ${CONFIG_PATH}/docker/qb:/config
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
-#    ports:
-#      - 8080:8080
-#      - 6881:6881
-#      - 6881:6881/udp
     restart: unless-stopped
-    network_mode: "service:openvpn"
+    network_mode: "service:gluetun"
     depends_on:
-      - openvpn
+      gluetun:
+        condition: service_healthy
 
   ## Trackers
   prowlarr:
@@ -64,7 +72,7 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/prowlarr:/config
+      - ${CONFIG_PATH}/docker/prowlarr:/config
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -77,7 +85,7 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/sonarr:/config
+      - ${CONFIG_PATH}/docker/sonarr:/config
       - ${MEDIA_SERVER_PATH}/data/media/tv:/data/tv
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
@@ -92,12 +100,13 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/radarr:/config
+      - ${CONFIG_PATH}/docker/radarr:/config
       - ${MEDIA_SERVER_PATH}/data/media/movies:/data/movies
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
       - 7878:7878
     restart: unless-stopped
+
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -107,7 +116,7 @@ services:
     ports:
       - 5055:5055
     volumes:
-      - ${MEDIA_SERVER_PATH}/docker/jellyseerr:/app/config
+      - ${CONFIG_PATH}/docker/jellyseerr:/app/config
     restart: unless-stopped
 
 networks:
