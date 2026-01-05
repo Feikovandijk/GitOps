@@ -30,8 +30,8 @@ services:
       - ${MEDIA_SERVER_PATH}/data/torrents:/data/torrents
     ports:
       - 127.0.0.1:8080:8080
-      - 127.0.0.1:6881:6881
-      - 127.0.0.1:6881:6881/udp
+      - 6881:6881
+      - 6881:6881/udp
     restart: unless-stopped
 
   ## Trackers
