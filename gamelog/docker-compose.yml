@@ -2,8 +2,8 @@ services:
   api:
     image: feikovd/gamebacklog-api:latest
     restart: unless-stopped
-    env_file:
-      - stack.env
+#    env_file:
+#      - stack.env
     ports:
       - '6543:6543'
   worker:
@@ -17,8 +17,8 @@ services:
   user-dashboard:
     image: feikovd/gamebacklog-userdash:latest
     restart: unless-stopped
-    env_file:
-      - stack.env
+#    env_file:
+#      - stack.env
     ports:
       - '8012:80'
     depends_on:
