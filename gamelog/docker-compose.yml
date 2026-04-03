@@ -4,6 +4,8 @@ services:
     restart: unless-stopped
     ports:
       - '${PORT:-6543}:6543'
+    labels:
+      - wud.watch.digest=true
     environment: &common-environment
       PORT: ${PORT:-6543}
       API_URL: ${API_URL}
@@ -28,6 +30,8 @@ services:
     command: ['node', 'dist/scripts/worker.js']
     depends_on:
       - api
+    labels:
+      - wud.watch.digest=true
     environment: *common-environment
 
   user-dashboard:
@@ -37,6 +41,8 @@ services:
       - '8012:80'
     depends_on:
       - api
+    labels:
+      - wud.watch.digest=true
     environment:
       BACKEND_URL: http://api:6543
       API_URL: ${API_URL}
