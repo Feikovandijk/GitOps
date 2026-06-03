@@ -130,20 +130,6 @@ services:
     networks:
       - vpn_network
 
-  jellyseerr:
-    image: fallenbagel/jellyseerr:latest
-    container_name: jellyseerr
-    environment:
-      - LOG_LEVEL=debug
-      - TZ=Europe/Amsterdam
-    ports:
-      - 5055:5055
-    volumes:
-      - ${CONFIG_PATH}/docker/jellyseerr:/app/config
-    restart: unless-stopped
-    networks:
-      - vpn_network
-
   seerr:
     image: ghcr.io/seerr-team/seerr:latest
     init: true
@@ -155,9 +141,9 @@ services:
       - TZ=Europe/Amsterdam
       - PORT=5055 #optional
     ports:
-      - 5056:5055
+      - 5055:5055
     volumes:
-      - ${CONFIG_PATH}/docker/seerr:/app/config
+      - ${CONFIG_PATH}/docker/jellyseerr:/app/config
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
       start_period: 20s
@@ -165,6 +151,8 @@ services:
       interval: 15s
       retries: 3
     restart: unless-stopped
+    networks:
+      - vpn_network
 
 
 networks:
