@@ -153,7 +153,7 @@ services:
       - TZ=Europe/Amsterdam
       - PORT=5055 #optional
     ports:
-      - 5055:5055
+      - 5056:5055
     volumes:
       - ${CONFIG_PATH}/docker/jellyseerr:/app/config
     healthcheck:
