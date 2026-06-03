@@ -149,6 +149,8 @@ services:
     init: true
     container_name: seerr
     environment:
+      - PUID=1000
+      - PGID=1000
       - LOG_LEVEL=debug
       - TZ=Europe/Amsterdam
       - PORT=5055 #optional
