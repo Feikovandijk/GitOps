@@ -24,6 +24,9 @@ services:
       # You can change this to a specific location if desired, e.g. 'nl' for Netherlands
       - SERVER_COUNTRIES=Netherlands
       - TZ=Europe/Amsterdam
+      # Allow the local docker subnet so containers (sonarr/radarr/prowlarr)
+      # can reach services behind gluetun without replies going out the tunnel
+      - FIREWALL_OUTBOUND_SUBNETS=172.31.0.0/16
     restart: unless-stopped
     networks:
       - vpn_network
